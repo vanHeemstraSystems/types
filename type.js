@@ -2,4 +2,4 @@
 //
 //export default Type;
 
-module.type = require(__dirname+'/type/index.js');;
+module.type = require(__dirname+'/type/index.js');
