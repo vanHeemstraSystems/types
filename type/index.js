@@ -1,6 +1,5 @@
-var schema =      require(__dirname+'/../schema.js'); // TO DO: provide this as a config property
-var util =        require(__dirname+'/../util.js');   // TO DO: provide this as a config property
-
+//var schema =      require(__dirname+'/../schema.js'); // TO DO: provide this as a Type property
+//var util =        require(__dirname+'/../util.js');   // TO DO: provide this as a Type property
 
 var TypeAny =     require(__dirname+'/any.js');
 var TypeArray =   require(__dirname+'/array.js');
@@ -13,11 +12,36 @@ var TypePoint =   require(__dirname+'/point.js');
 var TypeString =  require(__dirname+'/string.js');
 var TypeVirtual = require(__dirname+'/virtual.js');
 
+var self = this; // set the context locally, for access protection
+
 /**
  * Create a new Type that let users create sub-types.
  * @return {Type}
  */
-function Type() { }
+function Type() {
+  console.log('types type - Type called'); 
+  // add key value pairs here
+  // self's are not directly publicly accessible, only through their public method(s)
+  // use self's here for protection from direct access
+  self._schema = {}; // will be set by server, before passing on to mapping
+  self._util = {};   // will be set by server, before passing on to mapping
+}
+
+Type.prototype.schema = function() {
+  return self._schema;
+}
+
+Type.prototype.setschema = function(fnOrValue) {
+  self._schema = fnOrValue;
+}
+
+Type.prototype.util = function() {
+  return self._util;
+}
+
+Type.prototype.setutil = function(fnOrValue) {
+  self._util = fnOrValue;
+}
 
 /**
  * Create a new TypeAny object

@@ -1,5 +1,5 @@
-var util = require(__dirname+'/../util.js');
-var Errors = require(__dirname+'/../errors.js');
+var util = require(__dirname+'/../util.js');      // TO DO: provide this as a TypePoint property
+var Errors = require(__dirname+'/../errors.js');  // TO DO: provide this as a TypePoint property
 
 function TypePoint() {
   this._default = undefined;

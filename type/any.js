@@ -1,5 +1,5 @@
-var util = require(__dirname+'/../util.js');
-var schema =      require(__dirname+'/../schema.js');
+var util = require(__dirname+'/../util.js');           // TO DO: provide this as a Type property
+var schema =      require(__dirname+'/../schema.js');  // TO DO: provide this as a Type property
 
 function TypeAny() {
   this._default = undefined;

@@ -1,8 +1,8 @@
-var path = require('../../../libraries/path');
-var paths = require('../../../paths/paths');
-var util =       require(__dirname+'/../util.js');
-var validator = require(path.join(paths.libraries, '/validator.js'));
-var Errors = require(__dirname+'/../errors.js');
+var path = require('../../../libraries/path');     // TO DO: remove
+var paths = require('../../../paths/paths');       // TO DO: remove
+var util =       require(__dirname+'/../util.js');  // TO DO: provide this as a TypeString property
+var validator = require(path.join(paths.libraries, '/validator.js'));   // TO DO: provide this as a TypeString property
+var Errors = require(__dirname+'/../errors.js');    // TO DO: provide this as a TypeString property
 
 /**
  * Create a new TypeString object

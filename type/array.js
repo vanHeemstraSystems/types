@@ -1,7 +1,7 @@
-var util = require(__dirname+'/../util.js');
-var schema =      require(__dirname+'/../schema.js');
+var util = require(__dirname+'/../util.js');              // TO DO: provide this as a TypeArray property
+var schema =      require(__dirname+'/../schema.js');     // TO DO: provide this as a TypeArray property
 var arrayPrefix = schema.arrayPrefix;
-var Errors = require(__dirname+'/../errors.js');
+var Errors = require(__dirname+'/../errors.js');          // TO DO: provide this as a TypeArray property
 
 function TypeArray() {
   this._min = -1;
