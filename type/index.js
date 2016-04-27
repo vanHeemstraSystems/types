@@ -1,5 +1,7 @@
-var schema =      require(__dirname+'/../schema.js');
-var util =        require(__dirname+'/../util.js');
+var schema =      require(__dirname+'/../schema.js'); // TO DO: provide this as a config property
+var util =        require(__dirname+'/../util.js');   // TO DO: provide this as a config property
+
+
 var TypeAny =     require(__dirname+'/any.js');
 var TypeArray =   require(__dirname+'/array.js');
 var TypeBoolean = require(__dirname+'/boolean.js');
@@ -11,23 +13,19 @@ var TypePoint =   require(__dirname+'/point.js');
 var TypeString =  require(__dirname+'/string.js');
 var TypeVirtual = require(__dirname+'/virtual.js');
 
-
 /**
  * Create a new Type that let users create sub-types.
  * @return {Type}
  */
 function Type() { }
 
-
 /**
  * Create a new TypeAny object
  * @return {TypeAny}
  */
-
 Type.prototype.any = function() {
   return new TypeAny();
 }
-
 
 /**
  * Create a new TypeString object.
@@ -37,7 +35,6 @@ Type.prototype.string = function() {
   return new TypeString();
 }
 
-
 /**
  * Create a new TypeNumber object.
  * @return {TypeNumber}
@@ -45,7 +42,6 @@ Type.prototype.string = function() {
 Type.prototype.number = function() {
   return new TypeNumber();
 }
-
 
 /**
  * Create a new TypeBoolean object.
@@ -55,7 +51,6 @@ Type.prototype.boolean = function() {
   return new TypeBoolean();
 }
 
-
 /**
  * Create a new TypeDate object.
  * @return {TypeDate}
@@ -63,7 +58,6 @@ Type.prototype.boolean = function() {
 Type.prototype.date = function() {
   return new TypeDate();
 }
-
 
 /**
  * Create a new TypeBuffer object.
@@ -73,7 +67,6 @@ Type.prototype.buffer = function() {
   return new TypeBuffer();
 }
 
-
 /**
  * Create a new TypePoint object.
  * @return {TypePoint}
@@ -81,7 +74,6 @@ Type.prototype.buffer = function() {
 Type.prototype.point = function() {
   return new TypePoint();
 }
-
 
 /**
  * Create a new TypeObject object.
@@ -91,7 +83,6 @@ Type.prototype.object = function() {
   return new TypeObject();
 }
 
-
 /**
  * Create a new TypeArray object.
  * @return {TypeArray}
@@ -99,7 +90,6 @@ Type.prototype.object = function() {
 Type.prototype.array = function() {
   return new TypeArray();
 }
-
 
 /**
  * Create a new TypeVirtual object.
@@ -109,7 +99,6 @@ Type.prototype.virtual = function() {
   return new TypeVirtual();
 }
 
-
 /**
  * Create a new TypeString object to use as an id.
  * @return {TypeString}
@@ -117,7 +106,6 @@ Type.prototype.virtual = function() {
 Type.prototype.id = function() {
   return new TypeString().optional();
 }
-
 
 /**
  * Check if the first argument is a TypeString object or not
@@ -128,7 +116,6 @@ Type.prototype.isString = function(obj) {
   return obj instanceof TypeString;
 }
 
-
 /**
  * Check if the first argument is a TypeNumber object or not
  * @param {Object} obj The object to check against TypeNumber.
@@ -137,7 +124,6 @@ Type.prototype.isString = function(obj) {
 Type.prototype.isNumber = function(obj) {
   return obj instanceof TypeNumber;
 }
-
 
 /**
  * Check if the first argument is a TypeBoolean object or not
@@ -148,7 +134,6 @@ Type.prototype.isBoolean = function(obj) {
   return obj instanceof TypeBoolean;
 }
 
-
 /**
  * Check if the first argument is a TypeDate object or not
  * @param {Object} obj The object to check against TypeDate.
@@ -157,7 +142,6 @@ Type.prototype.isBoolean = function(obj) {
 Type.prototype.isDate = function(obj) {
   return obj instanceof TypeDate;
 }
-
 
 /**
  * Check if the first argument is a TypeBuffer object or not
@@ -168,7 +152,6 @@ Type.prototype.isBuffer = function(obj) {
   return obj instanceof TypeBuffer;
 }
 
-
 /**
  * Check if the first argument is a TypePoint object or not
  * @param {Object} obj The object to check against TypePoint.
@@ -177,7 +160,6 @@ Type.prototype.isBuffer = function(obj) {
 Type.prototype.isPoint = function(obj) {
   return obj instanceof TypePoint;
 }
-
 
 /**
  * Check if the first argument is a TypeObject object or not
@@ -188,7 +170,6 @@ Type.prototype.isObject = function(obj) {
   return obj instanceof TypeObject;
 }
 
-
 /**
  * Check if the first argument is a TypeArray object or not
  * @param {Object} obj The object to check against TypeArray.
@@ -197,7 +178,6 @@ Type.prototype.isObject = function(obj) {
 Type.prototype.isArray = function(obj) {
   return obj instanceof TypeArray;
 }
-
 
 /**
  * Check if the first argument is a TypeVirtual object or not
@@ -208,7 +188,6 @@ Type.prototype.isVirtual = function(obj) {
   return obj instanceof TypeVirtual;
 }
 
-
 /**
  * Check if the first argument is a TypeAny object or not
  * @param {Object} obj The object to check against TypeAny.
@@ -218,5 +197,4 @@ Type.prototype.isAny = function(obj) {
   return obj instanceof TypeAny;
 }
 
-
-module.exports = new Type();
+module.exports = Type;
