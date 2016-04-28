@@ -23,8 +23,18 @@ function Type() {
   // add key value pairs here
   // self's are not directly publicly accessible, only through their public method(s)
   // use self's here for protection from direct access
-  self._schema = {}; // will be set by server, before passing on to mapping
-  self._utility = {};   // will be set by server, before passing on to mapping
+  self._error = {};  // will be set, before passing on to mapping  
+  self._schema = {}; // will be set, before passing on to mapping
+  self._utility = {};   // will be set, before passing on to mapping
+  self._validator = {};  // will be set, before passing on to mapping  
+}
+
+Type.prototype.error = function() {
+  return self._error;
+}
+
+Type.prototype.seterror = function(fnOrValue) {
+  self._error = fnOrValue;
 }
 
 Type.prototype.schema = function() {
@@ -41,6 +51,14 @@ Type.prototype.util = function() {
 
 Type.prototype.setutil = function(fnOrValue) {
   self._util = fnOrValue;
+}
+
+Type.prototype.validator = function() {
+  return self._validator;
+}
+
+Type.prototype.setvalidator = function(fnOrValue) {
+  self._validator = fnOrValue;
 }
 
 /**
@@ -112,7 +130,12 @@ Type.prototype.object = function() {
  * @return {TypeArray}
  */
 Type.prototype.array = function() {
-  return new TypeArray();
+  this._typeArray = new TypeArray()
+  this._typeArray.seterror(self.error());
+  this._typeArray.setschema(self.schema());
+  this._typeArray.setutility(self.utility());
+  //ORIGINAL return new TypeArray();
+  return this._typeArray;
 }
 
 /**
