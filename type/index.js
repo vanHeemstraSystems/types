@@ -74,7 +74,12 @@ Type.prototype.any = function() {
  * @return {TypeString}
  */
 Type.prototype.string = function() {
-  return new TypeString();
+  this._typeString = new TypeString();
+  this._typeString.seterror(self.error());
+  this._typeString.setutility(self.utility());
+  this._typeString.setvalidator(self.validator());
+  //ORIGINAL return new TypeString();
+  return this._typeString;
 }
 
 /**
@@ -82,7 +87,11 @@ Type.prototype.string = function() {
  * @return {TypeNumber}
  */
 Type.prototype.number = function() {
-  return new TypeNumber();
+  this._typeNumber = new TypeNumber();
+  this._typeNumber.seterror(self.error());
+  this._typeNumber.setutility(self.utility());
+  //ORIGINAL return new TypeNumber();
+  return this._typeNumber;
 }
 
 /**
@@ -90,7 +99,11 @@ Type.prototype.number = function() {
  * @return {TypeBoolean}
  */
 Type.prototype.boolean = function() {
-  return new TypeBoolean();
+  this._typeBoolean = new TypeBoolean();
+  this._typeBoolean.seterror(self.error());
+  this._typeBoolean.setutility(self.utility());
+  //ORIGINAL return new TypeBoolean();
+  return this._typeBoolean;
 }
 
 /**
@@ -98,7 +111,11 @@ Type.prototype.boolean = function() {
  * @return {TypeDate}
  */
 Type.prototype.date = function() {
-  return new TypeDate();
+  this._typeDate = new TypeDate();
+  this._typeDate.seterror(self.error());
+  this._typeDate.setutility(self.utility());
+  //ORIGINAL return new TypeDate();
+  return this._typeDate; 
 }
 
 /**
@@ -106,7 +123,11 @@ Type.prototype.date = function() {
  * @return {TypeBuffer}
  */
 Type.prototype.buffer = function() {
-  return new TypeBuffer();
+  this._typeBuffer = new TypeBuffer();
+  this._typeBuffer.seterror(self.error());
+  this._typeBuffer.setutility(self.utility());
+  //ORIGINAL return new TypeBuffer();
+  return this._typeBuffer;
 }
 
 /**
@@ -114,7 +135,11 @@ Type.prototype.buffer = function() {
  * @return {TypePoint}
  */
 Type.prototype.point = function() {
-  return new TypePoint();
+  this._typePoint = new TypePoint();
+  this._typePoint.seterror(self.error());
+  this._typePoint.setutility(self.utility());
+  //ORIGINAL return new TypePoint();
+  return this._typePoint;
 }
 
 /**
@@ -122,7 +147,11 @@ Type.prototype.point = function() {
  * @return {TypeObject}
  */
 Type.prototype.object = function() {
-  return new TypeObject();
+  this._typeObject = new TypeObject();
+  this._typeObject.seterror(self.error());
+  this._typeObject.setutility(self.utility());
+  //ORIGINAL return new TypeObject();
+  return this._typeObject;
 }
 
 /**
