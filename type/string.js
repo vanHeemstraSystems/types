@@ -1,13 +1,18 @@
-var path = require('../../../libraries/path');     // TO DO: remove
-var paths = require('../../../paths/paths');       // TO DO: remove
-var util =       require(__dirname+'/../util.js');  // TO DO: provide this as a TypeString property
-var validator = require(path.join(paths.libraries, '/validator.js'));   // TO DO: provide this as a TypeString property
-var Errors = require(__dirname+'/../errors.js');    // TO DO: provide this as a TypeString property
+//var path = require('../../../libraries/path');     // TO DO: remove
+//var paths = require('../../../paths/paths');       // TO DO: remove
+//var util =       require(__dirname+'/../util.js');  // TO DO: provide this as a TypeString property
+//var validator = require(path.join(paths.libraries, '/validator.js'));   // TO DO: provide this as a TypeString property
+//var Errors = require(__dirname+'/../errors.js');    // TO DO: provide this as a TypeString property
+
+var self = this; // set the context locally, for access protection
 
 /**
  * Create a new TypeString object
  */
 function TypeString() {
+  self._error = {};  // will be set, before passing on to mapping  
+  self._utility = {};  // will be set, before passing on to mapping
+  self._validator = {};  // will be set, before passing on to mapping
   /**
    * Minimum length of the string, negative if no minimum length is required.
    * @type {number}
@@ -69,6 +74,29 @@ function TypeString() {
   this._options = {};
 }
 
+TypeString.prototype.error = function() {
+  return self._error;
+}
+
+TypeString.prototype.seterror = function(fnOrValue) {
+  self._error = fnOrValue;
+}
+
+TypeString.prototype.utility = function() {
+  return self._utility;
+}
+
+TypeString.prototype.setutility = function(fnOrValue) {
+  self._utility = fnOrValue;
+}
+
+TypeString.prototype.validator = function() {
+  return self._validator;
+}
+
+TypeString.prototype.setvalidator = function(fnOrValue) {
+  self._validator = fnOrValue;
+}
 
 /**
  * Set the options for this field.
@@ -79,7 +107,8 @@ function TypeString() {
  * @return {TypeString}
  */
 TypeString.prototype.options = function(options) {
-  if (util.isPlainObject(options)) {
+  //ORIGINAL if (util.isPlainObject(options)) {
+  if (self.utility().isPlainObject(options)) {
     if (options.enforce_missing != null) {
       this._options.enforce_missing =  options.enforce_missing
     }
@@ -150,7 +179,8 @@ TypeString.prototype.allowNull = function(value) {
  */
 TypeString.prototype.min = function(min) {
   if (min < 0) {
-    throw new Errors.ValidationError("The value for `min` must be a positive integer");
+    //ORIGINAL throw new Errors.ValidationError("The value for `min` must be a positive integer");
+    throw new self.error().ValidationError("The value for `min` must be a positive integer");
   }
   this._min = min;
   return this;
@@ -164,7 +194,8 @@ TypeString.prototype.min = function(min) {
  */
 TypeString.prototype.max = function(max) {
   if (max < 0) {
-    throw new Errors.ValidationError("The value for `max` must be a positive integer");
+    //ORIGINAL throw new Errors.ValidationError("The value for `max` must be a positive integer");
+    throw new self.error().ValidationError("The value for `max` must be a positive integer");
   }
   this._max = max;
   return this;
@@ -178,12 +209,12 @@ TypeString.prototype.max = function(max) {
  */
 TypeString.prototype.length = function(length) {
   if (length < 0) {
-    throw new Errors.ValidationError("The value for `length` must be a positive integer");
+    //ORIGINAL throw new Errors.ValidationError("The value for `length` must be a positive integer");
+    throw new self.error().ValidationError("The value for `length` must be a positive integer");
   }
   this._length = length;
   return this;
 }
-
 
 /**
  * Set the regex that the string must match.
@@ -201,7 +232,6 @@ TypeString.prototype.regex = function(regex, flags) {
   return this;
 }
 
-
 /**
  * Set the string to be alphanumeric.
  * @return {TypeString}
@@ -210,7 +240,6 @@ TypeString.prototype.alphanum = function() {
   this._alphanum = true;
   return this;
 }
-
 
 /**
  * Set the string to be an email.
@@ -221,7 +250,6 @@ TypeString.prototype.email = function() {
   return this;
 }
 
-
 /**
  * Set the string to be lowercase.
  * @return {TypeString}
@@ -231,7 +259,6 @@ TypeString.prototype.lowercase = function() {
   return this;
 }
 
-
 /**
  * Set the string to be uppercase.
  * @return {TypeString}
@@ -240,7 +267,6 @@ TypeString.prototype.uppercase = function() {
   this._uppercase = true;
   return this;
 }
-
 
 /**
  * Set the default value for this string, or the function that will generate
@@ -253,20 +279,18 @@ TypeString.prototype.default = function(fnOrValue) {
   return this;
 }
 
-
 /**
  * Set a custom validator that will be called with the string. The validator
  * should return a boolean whether the field is valid or not.
  * @param {function} fn
  * @return {TypeString}
  */
-TypeString.prototype.validator = function(fn) {
+TypeString.prototype.validator = function(fn) {  // WE ALREADY HAVE A FUNCTION validator .... MANAGE THIS !
   if (typeof fn === "function") {
     this._validator = fn;
   }
   return this;
 }
-
 
 /**
  * Set the valid values for this field. The arguments must be strings
@@ -290,7 +314,6 @@ TypeString.prototype.enum = function() {
   return this;
 }
 
-
 /**
  * Validate the string given optional options, and throw an error in case
  * the field is not valid.
@@ -302,48 +325,59 @@ TypeString.prototype.enum = function() {
 TypeString.prototype.validate = function(str, prefix, options) {
   var _options = util.mergeOptions(this._options, options);
 
-  if (util.validateIfUndefined(str, prefix, "string", _options)) return;
+  //ORIGINAL if (util.validateIfUndefined(str, prefix, "string", _options)) return;
+  if (self.utility().validateIfUndefined(str, prefix, "string", _options)) return;
 
   if ((typeof this._validator === "function") && (this._validator(str) === false)) {
-    throw new Errors.ValidationError("Validator for the field "+prefix+" returned `false`.");
+    //ORIGINAL throw new Errors.ValidationError("Validator for the field "+prefix+" returned `false`.");
+    throw new self.error().ValidationError("Validator for the field "+prefix+" returned `false`.");
   }
-
 
   if ((typeof str === 'function') && (str._query !== undefined)) {
     // We do not check ReQL terms
   }
   else if (typeof str !== "string") {
     if (_options.enforce_type === "strict") {
-      util.strictType(prefix, "string");
+      //ORIGINAL util.strictType(prefix, "string");
+      self.utility().strictType(prefix, "string");
     }
     else if ((_options.enforce_type === "loose") && (str !== null)) {
-      util.looseType(prefix, "string");
+      //ORIGINAL util.looseType(prefix, "string");
+      self.utility().looseType(prefix, "string");
     }
   }
   else {
     if ((this._min !== -1) && (this._min > str.length)){
-      throw new Errors.ValidationError("Value for "+prefix+" must be longer than "+this._min+".")
+      //ORIGINAL throw new Errors.ValidationError("Value for "+prefix+" must be longer than "+this._min+".")
+      throw new self.error().ValidationError("Value for "+prefix+" must be longer than "+this._min+".")
     }
     if ((this._max !== -1) && (this._max < str.length)){
-      throw new Errors.ValidationError("Value for "+prefix+" must be shorter than "+this._max+".")
+      //ORIGINAL throw new Errors.ValidationError("Value for "+prefix+" must be shorter than "+this._max+".")
+      throw new self.error().ValidationError("Value for "+prefix+" must be shorter than "+this._max+".")
     }
     if ((this._length !== -1) && (this._length !== str.length)){
-      throw new Errors.ValidationError("Value for "+prefix+" must be a string with "+this._length+" characters.")
+      //ORIGINAL throw new Errors.ValidationError("Value for "+prefix+" must be a string with "+this._length+" characters.")
+      throw new self.error().ValidationError("Value for "+prefix+" must be a string with "+this._length+" characters.")
     }
     if ((this._regex instanceof RegExp) && (this._regex.test(str) === false)) {
-      throw new Errors.ValidationError("Value for "+prefix+" must match the regex.")
+      //ORIGINAL throw new Errors.ValidationError("Value for "+prefix+" must match the regex.")
+      throw new self.error().ValidationError("Value for "+prefix+" must match the regex.")
     }
     if ((this._alphanum === true) && (validator.isAlphanumeric(str) === false)) {
-      throw new Errors.ValidationError("Value for "+prefix+" must be an alphanumeric string.")
+      //ORIGINAL throw new Errors.ValidationError("Value for "+prefix+" must be an alphanumeric string.")
+      throw new self.error().ValidationError("Value for "+prefix+" must be an alphanumeric string.")
     }
     if ((this._email === true) && (validator.isEmail(str) === false)) {
-      throw new Errors.ValidationError("Value for "+prefix+" must be a valid email.")
+      //ORIGINAL throw new Errors.ValidationError("Value for "+prefix+" must be a valid email.")
+      throw new self.error().ValidationError("Value for "+prefix+" must be a valid email.")
     }
     if ((this._lowercase === true) && (validator.isLowercase(str) === false)) {
-      throw new Errors.ValidationError("Value for "+prefix+" must be a lowercase string.")
+      //ORIGINAL throw new Errors.ValidationError("Value for "+prefix+" must be a lowercase string.")
+      throw new self.error().ValidationError("Value for "+prefix+" must be a lowercase string.")
     }
     if ((this._uppercase === true) && (validator.isUppercase(str) === false)) {
-      throw new Errors.ValidationError("Value for "+prefix+" must be a uppercase string.")
+      //ORIGINAL throw new Errors.ValidationError("Value for "+prefix+" must be a uppercase string.")
+      throw new self.error().ValidationError("Value for "+prefix+" must be a uppercase string.")
     }
     if ((this._enum !== undefined) && (this._enum[str] !== true)) {
       var validValues = Object.keys(this._enum);
@@ -370,7 +404,6 @@ TypeString.prototype.validate = function(str, prefix, options) {
   }
 }
 
-
 /**
  * Look for a default value or default function, and append an object to `defaultFields`.
  * @param {string} prefix The prefix leading to `str`.
@@ -387,6 +420,5 @@ TypeString.prototype._getDefaultFields = function(prefix, defaultFields, virtual
   }
   return this;
 }
-
 
 module.exports = TypeString;

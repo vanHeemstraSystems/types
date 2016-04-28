@@ -1,15 +1,15 @@
+var self = this; // set the context locally, for access protection
+
 function TypeVirtual() {
   this._default = undefined;
   this._validator = undefined;
   this._options = {};
 }
 
-
 TypeVirtual.prototype.default = function(fnOrValue) {
   this._default = fnOrValue;
   return this;
 }
-
 
 // Dummy functions
 TypeVirtual.prototype.validate = function() {}

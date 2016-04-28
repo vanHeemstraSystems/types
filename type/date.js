@@ -1,16 +1,36 @@
-var util = require(__dirname+'/../util.js');      // TO DO: provide this as a TypeDate property
-var Errors = require(__dirname+'/../errors.js');  // TO DO: provide this as a TypeDate property
+//var util = require(__dirname+'/../util.js');      // TO DO: provide this as a TypeDate property
+//var Errors = require(__dirname+'/../errors.js');  // TO DO: provide this as a TypeDate property
+
+var self = this; // set the context locally, for access protection
 
 function TypeDate() {
+  self._error = {};  // will be set, before passing on to mapping  
+  self._utility = {};  // will be set, before passing on to mapping
   this._min = undefined;
   this._max = undefined;
   this._validator = undefined;
   this._options = {};
 }
 
+TypeDate.prototype.error = function() {
+  return self._error;
+}
+
+TypeDate.prototype.seterror = function(fnOrValue) {
+  self._error = fnOrValue;
+}
+
+TypeDate.prototype.utility = function() {
+  return self._utility;
+}
+
+TypeDate.prototype.setutility = function(fnOrValue) {
+  self._utility = fnOrValue;
+}
 
 TypeDate.prototype.options = function(options) {
-  if (util.isPlainObject(options)) {
+  //ORIGINAL if (util.isPlainObject(options)) {
+  if (self.utility().isPlainObject(options)) {
     if (options.enforce_missing != null) {
       this._options.enforce_missing =  options.enforce_missing
     }
@@ -24,18 +44,15 @@ TypeDate.prototype.options = function(options) {
   return this;
 }
 
-
 TypeDate.prototype.optional = function() {
   this._options.enforce_missing = false;
   return this;
 }
 
-
 TypeDate.prototype.required = function() {
   this._options.enforce_missing = true;
   return this;
 }
-
 
 TypeDate.prototype.allowNull = function(value) {
   if (this._options.enforce_type === 'strict') {
@@ -58,24 +75,20 @@ TypeDate.prototype.allowNull = function(value) {
   return this;
 }
 
-
 TypeDate.prototype.min = function(min) {
   this._min = min;
   return this;
 }
-
 
 TypeDate.prototype.max = function(max) {
   this._max = max;
   return this;
 }
 
-
 TypeDate.prototype.default = function(fnOrValue) {
   this._default = fnOrValue;
   return this;
 }
-
 
 TypeDate.prototype.validator = function(fn) {
   if (typeof fn === "function") {
@@ -84,23 +97,28 @@ TypeDate.prototype.validator = function(fn) {
   return this;
 }
 
-
 TypeDate.prototype.validate = function(date, prefix, options) {
-  options = util.mergeOptions(this._options, options);
+  //ORIGINAL options = util.mergeOptions(this._options, options);
+  options = self.utility().mergeOptions(this._options, options);
 
-  if (util.validateIfUndefined(date, prefix, "date", options)) return;
+  //ORIGINAL if (util.validateIfUndefined(date, prefix, "date", options)) return;
+  if (self.utility().validateIfUndefined(date, prefix, "date", options)) return;
 
   if ((typeof this._validator === "function") && (this._validator(date) === false)) {
-    throw new Errors.ValidationError("Validator for the field "+prefix+" returned `false`.");
+    //ORIGINAL throw new Errors.ValidationError("Validator for the field "+prefix+" returned `false`.");
+    throw new self.error().ValidationError("Validator for the field "+prefix+" returned `false`.");
   }
 
   var jsDate;
-  if (util.isPlainObject(date) && (date["$reql_type$"] === "TIME")) {
+  //ORIGINAL if (util.isPlainObject(date) && (date["$reql_type$"] === "TIME")) {
+  if (self.utility().isPlainObject(date) && (date["$reql_type$"] === "TIME")) {
     if (date.epoch_time === undefined) {
-      util.pseudoTypeError("date", "epoch_time", prefix);
+      //ORIGINAL util.pseudoTypeError("date", "epoch_time", prefix);
+      self.utility().pseudoTypeError("date", "epoch_time", prefix);
     }
     else if (date.timezone === undefined) {
-      util.pseudoTypeError("date", "timezone", prefix);
+      //ORIGINAL util.pseudoTypeError("date", "timezone", prefix);
+      self.utility().pseudoTypeError("date", "timezone", prefix);
     }
 
     jsDate = new Date(0);
@@ -118,19 +136,23 @@ TypeDate.prototype.validate = function(date, prefix, options) {
     jsDate = new Date(date);
     if (jsDate.getTime() !== jsDate.getTime()) {
       if (options.enforce_type === "strict") {
-        util.strictType(prefix, "date or a valid string");
+        //ORIGINAL util.strictType(prefix, "date or a valid string");
+        self.utility().strictType(prefix, "date or a valid string");
       }
       else if (options.enforce_type !== "none") {
-        util.looseType(prefix, "date or a valid string");
+        //ORIGINAL util.looseType(prefix, "date or a valid string");
+        self.utility().looseType(prefix, "date or a valid string");
       }
     }
   }
   else if ((date instanceof Date) === false) { // We have a non valid date
     if (options.enforce_type === "strict") {
-      util.strictType(prefix, "date");
+      //ORIGINAL util.strictType(prefix, "date");
+      self.utility().strictType(prefix, "date");
     }
     else if ((options.enforce_type === "loose") && (date !== null)) {
-      util.looseType(prefix, "date");
+      //ORIGINAL util.looseType(prefix, "date");
+      self.utility().looseType(prefix, "date");
     }
   }
   else {
@@ -140,14 +162,15 @@ TypeDate.prototype.validate = function(date, prefix, options) {
   // We check for min/max only if we could create a javascript date from the value
   if (jsDate !== undefined) {
     if ((this._min instanceof Date) && (this._min > jsDate)){
-      throw new Errors.ValidationError("Value for "+prefix+" must be after "+this._min+".")
+      //ORIGINAL throw new Errors.ValidationError("Value for "+prefix+" must be after "+this._min+".")
+      throw new self.error().ValidationError("Value for "+prefix+" must be after "+this._min+".")
     }
     if ((this._max instanceof Date) && (this._max < jsDate)){
-      throw new Errors.ValidationError("Value for "+prefix+" must be before "+this._max+".")
+      //ORIGINAL throw new Errors.ValidationError("Value for "+prefix+" must be before "+this._max+".")
+      throw new self.error().ValidationError("Value for "+prefix+" must be before "+this._max+".")
     }
   }
 }
-
 
 TypeDate.prototype._getDefaultFields = function(prefix, defaultFields, virtualFields) {
   if (this._default !== undefined) {
@@ -157,6 +180,5 @@ TypeDate.prototype._getDefaultFields = function(prefix, defaultFields, virtualFi
     });
   }
 }
-
 
 module.exports = TypeDate;

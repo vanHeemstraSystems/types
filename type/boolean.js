@@ -1,15 +1,35 @@
-var util = require(__dirname+'/../util.js');      // TO DO: provide this as a TypeBoolean property
-var Errors = require(__dirname+'/../errors.js');  // TO DO: provide this as a TypeBoolean property
+//var util = require(__dirname+'/../util.js');      // TO DO: provide this as a TypeBoolean property
+//var Errors = require(__dirname+'/../errors.js');  // TO DO: provide this as a TypeBoolean property
+
+var self = this; // set the context locally, for access protection
 
 function TypeBoolean() {
+  self._error = {};  // will be set, before passing on to mapping  
+  self._utility = {};  // will be set, before passing on to mapping  
   this._default = undefined;
   this._validator = undefined;
   this._options = {};
 }
 
+TypeBoolean.prototype.error = function() {
+  return self._error;
+}
+
+TypeBoolean.prototype.seterror = function(fnOrValue) {
+  self._error = fnOrValue;
+}
+
+TypeBoolean.prototype.utility = function() {
+  return self._utility;
+}
+
+TypeBoolean.prototype.setutility = function(fnOrValue) {
+  self._utility = fnOrValue;
+}
 
 TypeBoolean.prototype.options = function(options) {
-  if (util.isPlainObject(options)) {
+  //if (util.isPlainObject(options)) {
+  if (self.utility().isPlainObject(options)) {
     if (options.enforce_missing != null) {
       this._options.enforce_missing =  options.enforce_missing
     }
@@ -23,18 +43,15 @@ TypeBoolean.prototype.options = function(options) {
   return this;
 }
 
-
 TypeBoolean.prototype.optional = function() {
   this._options.enforce_missing = false;
   return this;
 }
 
-
 TypeBoolean.prototype.required = function() {
   this._options.enforce_missing = true;
   return this;
 }
-
 
 TypeBoolean.prototype.allowNull = function(value) {
   if (this._options.enforce_type === 'strict') {
@@ -57,13 +74,10 @@ TypeBoolean.prototype.allowNull = function(value) {
   return this;
 }
 
-
-
 TypeBoolean.prototype.default = function(fnOrValue) {
   this._default = fnOrValue;
   return this;
 }
-
 
 TypeBoolean.prototype.validator = function(fn) {
   if (typeof fn === "function") {
@@ -72,26 +86,29 @@ TypeBoolean.prototype.validator = function(fn) {
   return this;
 }
 
-
 TypeBoolean.prototype.validate = function(bool, prefix, options) {
-  options = util.mergeOptions(this._options, options);
+  //ORIGINAL options = util.mergeOptions(this._options, options);
+  options = self.utility().mergeOptions(this._options, options);
 
-  if (util.validateIfUndefined(bool, prefix, "boolean", options)) return;
+  //ORIGINAL if (util.validateIfUndefined(bool, prefix, "boolean", options)) return;
+  if (self.utility().validateIfUndefined(bool, prefix, "boolean", options)) return;
 
   if ((typeof this._validator === "function") && (this._validator(bool) === false)) {
-    throw new Errors.ValidationError("Validator for the field "+prefix+" returned `false`.");
+    //ORIGINAL throw new Errors.ValidationError("Validator for the field "+prefix+" returned `false`.");
+    throw new self.error().ValidationError("Validator for the field "+prefix+" returned `false`.");
   }
 
   if (typeof bool !== "boolean") {
     if (options.enforce_type === "strict") {
-      util.strictType(prefix, "boolean");
+      //ORIGINAL util.strictType(prefix, "boolean");
+      self.utility().strictType(prefix, "boolean");
     }
     else if ((options.enforce_type === "loose") && (bool !== null)) {
-      util.looseType(prefix, "boolean");
+      //ORIGINAL util.looseType(prefix, "boolean");
+      self.utility().looseType(prefix, "boolean");
     }
   }
 }
-
 
 TypeBoolean.prototype._getDefaultFields = function(prefix, defaultFields, virtualFields) {
   if (this._default !== undefined) {
@@ -101,6 +118,5 @@ TypeBoolean.prototype._getDefaultFields = function(prefix, defaultFields, virtua
     });
   }
 }
-
 
 module.exports = TypeBoolean;

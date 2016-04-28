@@ -1,15 +1,35 @@
-var util = require(__dirname+'/../util.js');       // TO DO: provide this as a TypeBuffer property
-var Errors = require(__dirname+'/../errors.js');   // TO DO: provide this as a TypeBuffer property
+//var util = require(__dirname+'/../util.js');       // TO DO: provide this as a TypeBuffer property
+//var Errors = require(__dirname+'/../errors.js');   // TO DO: provide this as a TypeBuffer property
+
+var self = this; // set the context locally, for access protection
 
 function TypeBuffer() {
+  self._error = {};  // will be set, before passing on to mapping  
+  self._utility = {};  // will be set, before passing on to mapping  
   this._default = undefined;
   this._options = {};
   this._validator = undefined;
 }
 
+TypeBuffer.prototype.error = function() {
+  return self._error;
+}
+
+TypeBuffer.prototype.seterror = function(fnOrValue) {
+  self._error = fnOrValue;
+}
+
+TypeBuffer.prototype.utility = function() {
+  return self._utility;
+}
+
+TypeBuffer.prototype.setutility = function(fnOrValue) {
+  self._utility = fnOrValue;
+}
 
 TypeBuffer.prototype.options = function(options) {
-  if (util.isPlainObject(options)) {
+  //ORIGINAL if (util.isPlainObject(options)) {
+  if (self.utility().isPlainObject(options)) {
     if (options.enforce_missing != null) {
       this._options.enforce_missing =  options.enforce_missing
     }
@@ -23,18 +43,15 @@ TypeBuffer.prototype.options = function(options) {
   return this;
 }
 
-
 TypeBuffer.prototype.optional = function() {
   this._options.enforce_missing = false;
   return this;
 }
 
-
 TypeBuffer.prototype.required = function() {
   this._options.enforce_missing = true;
   return this;
 }
-
 
 TypeBuffer.prototype.allowNull = function(value) {
   if (this._options.enforce_type === 'strict') {
@@ -57,12 +74,10 @@ TypeBuffer.prototype.allowNull = function(value) {
   return this;
 }
 
-
 TypeBuffer.prototype.default = function(fnOrValue) {
   this._default = fnOrValue;
   return this;
 }
-
 
 TypeBuffer.prototype.validator = function(fn) {
   if (typeof fn === "function") {
@@ -71,19 +86,23 @@ TypeBuffer.prototype.validator = function(fn) {
   return this;
 }
 
-
 TypeBuffer.prototype.validate = function(buffer, prefix, options) {
-  options = util.mergeOptions(this._options, options);
+  //ORIGINAL options = util.mergeOptions(this._options, options);
+  options = self.utility().mergeOptions(this._options, options);
 
-  if (util.validateIfUndefined(buffer, prefix, "buffer", options)) return;
+  //ORIGINAL if (util.validateIfUndefined(buffer, prefix, "buffer", options)) return;
+  if (self.utility().validateIfUndefined(buffer, prefix, "buffer", options)) return;
 
   if ((typeof this._validator === "function") && (this._validator(buffer) === false)) {
-    throw new Errors.ValidationError("Validator for the field "+prefix+" returned `false`.");
+    //ORIGINAL throw new Errors.ValidationError("Validator for the field "+prefix+" returned `false`.");
+    throw new self.error().ValidationError("Validator for the field "+prefix+" returned `false`.");
   }
 
-  if (util.isPlainObject(buffer) && (buffer["$reql_type$"] === "BINARY")) {
+  //ORIGINAL if (util.isPlainObject(buffer) && (buffer["$reql_type$"] === "BINARY")) {
+  if (self.utility().isPlainObject(buffer) && (buffer["$reql_type$"] === "BINARY")) {
     if (buffer.data === undefined) {
-      util.pseudoTypeError("binary", "data", prefix);
+      //ORIGINAL util.pseudoTypeError("binary", "data", prefix);
+      self.utility().pseudoTypeError("binary", "data", prefix);
     }
   }
   else if ((typeof buffer === 'function') && (buffer._query !== undefined)) {
@@ -92,14 +111,15 @@ TypeBuffer.prototype.validate = function(buffer, prefix, options) {
   }
   else if ((buffer instanceof Buffer) === false)  { // We don't have a buffer
     if (options.enforce_type === "strict") {
-      util.strictType(prefix, "buffer");
+      //ORIGINAL util.strictType(prefix, "buffer");
+      self.utility().strictType(prefix, "buffer");
     }
     else if ((options.enforce_type === "loose") && (buffer !== null)) {
-      util.looseType(prefix, "buffer");
+      //ORIGINAL util.looseType(prefix, "buffer");
+      self.utility().looseType(prefix, "buffer");
     }
   }
 }
-
 
 TypeBuffer.prototype._getDefaultFields = function(prefix, defaultFields, virtualFields) {
   if (this._default !== undefined) {
@@ -109,6 +129,5 @@ TypeBuffer.prototype._getDefaultFields = function(prefix, defaultFields, virtual
     });
   }
 }
-
 
 module.exports = TypeBuffer;

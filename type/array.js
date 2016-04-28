@@ -1,9 +1,14 @@
-var util = require(__dirname+'/../util.js');              // TO DO: provide this as a TypeArray property
-var schema =      require(__dirname+'/../schema.js');     // TO DO: provide this as a TypeArray property
-var arrayPrefix = schema.arrayPrefix;
-var Errors = require(__dirname+'/../errors.js');          // TO DO: provide this as a TypeArray property
+//var util = require(__dirname+'/../util.js');              // TO DO: provide this as a TypeArray property
+//var schema =      require(__dirname+'/../schema.js');     // TO DO: provide this as a TypeArray property
+//var arrayPrefix = schema.arrayPrefix;
+//var Errors = require(__dirname+'/../errors.js');          // TO DO: provide this as a TypeArray property
+
+var self = this; // set the context locally, for access protection
 
 function TypeArray() {
+  self._error = {};  // will be set, before passing on to mapping
+  self._schema = {};  // will be set, before passing on to mapping
+  self._utility = {};  // will be set, before passing on to mapping
   this._min = -1;
   this._max = -1;
   this._length = -1;
@@ -12,9 +17,33 @@ function TypeArray() {
   this._options = {};
 }
 
+TypeArray.prototype.error = function() {
+  return self._error;
+}
+
+TypeArray.prototype.seterror = function(fnOrValue) {
+  self._error = fnOrValue;
+}
+
+TypeArray.prototype.schema = function() {
+  return self._schema;
+}
+
+TypeArray.prototype.setschema = function(fnOrValue) {
+  self._schema = fnOrValue;
+}
+
+TypeArray.prototype.utility = function() {
+  return self._utility;
+}
+
+TypeArray.prototype.setutility = function(fnOrValue) {
+  self._utility = fnOrValue;
+}
 
 TypeArray.prototype.options = function(options) {
-  if (util.isPlainObject(options)) {
+  //ORIGINAL if (util.isPlainObject(options)) {
+  if (self.utility().isPlainObject(options)) {  
     if (options.enforce_missing != null) {
       this._options.enforce_missing =  options.enforce_missing
     }
@@ -65,7 +94,8 @@ TypeArray.prototype.allowNull = function(value) {
 
 TypeArray.prototype.min = function(min) {
   if (min < 0) {
-    throw new Errors.ValidationError("The value for `min` must be a positive integer");
+    //ORIGINAL throw new Errors.ValidationError("The value for `min` must be a positive integer");
+    throw new self.error().validationerror("The value for `min` must be a positive integer");
   }
   this._min = min;
   return this;
@@ -74,7 +104,8 @@ TypeArray.prototype.min = function(min) {
 
 TypeArray.prototype.max = function(max) {
   if (max < 0) {
-    throw new Errors.ValidationError("The value for `max` must be a positive integer");
+    //ORIGINAL throw new Errors.ValidationError("The value for `max` must be a positive integer");
+    throw new self.error().validationerror("The value for `max` must be a positive integer");
   }
   this._max = max;
   return this;
@@ -83,14 +114,15 @@ TypeArray.prototype.max = function(max) {
 
 TypeArray.prototype.length = function(length) {
   if (length < 0) {
-    throw new Errors.ValidationError("The value for `length` must be a positive integer");
+    //throw new Errors.ValidationError("The value for `length` must be a positive integer");
+    throw new self.error().validationerror("The value for `length` must be a positive integer");
   }
   this._length = length;
   return this;
 }
 
 
-TypeArray.prototype.schema = function(schema) {
+TypeArray.prototype.schema = function(schema) { // WE ALREADY HAVE A schema FUNCTION... MANAGE THIS!
   this._schema = schema;
   return this;
 }
@@ -107,6 +139,7 @@ TypeArray.prototype.validator = function(fn) {
   return this;
 }
 
+// FIX ALL BELOW FOR self.utility() etc ......
 
 TypeArray.prototype.validate = function(array, prefix, options) {
   var self = this;
@@ -160,7 +193,8 @@ TypeArray.prototype._getDefaultFields = function(prefix, defaultFields, virtualF
     });
   }
   if (this._schema !== undefined) {
-    this._schema._getDefaultFields(prefix.concat(arrayPrefix), defaultFields, virtualFields);
+    //ORIGINAL this._schema._getDefaultFields(prefix.concat(arrayPrefix), defaultFields, virtualFields);
+    this._schema._getDefaultFields(prefix.concat(self.schema().arrayPrefix), defaultFields, virtualFields);
   }
 }
 

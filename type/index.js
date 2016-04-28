@@ -24,7 +24,7 @@ function Type() {
   // self's are not directly publicly accessible, only through their public method(s)
   // use self's here for protection from direct access
   self._schema = {}; // will be set by server, before passing on to mapping
-  self._util = {};   // will be set by server, before passing on to mapping
+  self._utility = {};   // will be set by server, before passing on to mapping
 }
 
 Type.prototype.schema = function() {

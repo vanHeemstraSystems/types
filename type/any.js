@@ -1,5 +1,7 @@
-var util = require(__dirname+'/../util.js');           // TO DO: provide this as a Type property
-var schema =      require(__dirname+'/../schema.js');  // TO DO: provide this as a Type property
+//var util = require(__dirname+'/../util.js');           // TO DO: remove, not used here
+//var schema =      require(__dirname+'/../schema.js');  // TO DO: remove, not used here
+
+var self = this; // set the context locally, for access protection
 
 function TypeAny() {
   this._default = undefined;
