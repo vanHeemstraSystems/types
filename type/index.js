@@ -45,12 +45,12 @@ Type.prototype.setschema = function(fnOrValue) {
   self._schema = fnOrValue;
 }
 
-Type.prototype.util = function() {
-  return self._util;
+Type.prototype.utility = function() {
+  return self._utility;
 }
 
-Type.prototype.setutil = function(fnOrValue) {
-  self._util = fnOrValue;
+Type.prototype.setutility = function(fnOrValue) {
+  self._utility = fnOrValue;
 }
 
 Type.prototype.validator = function() {
