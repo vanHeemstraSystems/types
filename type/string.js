@@ -323,7 +323,8 @@ TypeString.prototype.enum = function() {
  * @throws {Error}
  */
 TypeString.prototype.validate = function(str, prefix, options) {
-  var _options = util.mergeOptions(this._options, options);
+  // ORIGINAL var _options = util.mergeOptions(this._options, options);
+  var _options = self.utility().mergeOptions(this._options, options);
 
   //ORIGINAL if (util.validateIfUndefined(str, prefix, "string", _options)) return;
   if (self.utility().validateIfUndefined(str, prefix, "string", _options)) return;
