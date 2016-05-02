@@ -23,10 +23,10 @@ function Type() {
   // add key value pairs here
   // self's are not directly publicly accessible, only through their public method(s)
   // use self's here for protection from direct access
-  self._error = {};  // will be set, before passing on to mapping  
+  self._error = {};  // will be set, before passing on to mapping
   self._schema = {}; // will be set, before passing on to mapping
   self._utility = {};   // will be set, before passing on to mapping
-  self._validator = {};  // will be set, before passing on to mapping  
+  self._validator = {};  // will be set, before passing on to mapping
 }
 
 Type.prototype.error = function() {
